@@ -1,0 +1,124 @@
+import tkinter as tk
+from tkinter import ttk
+
+def save_and_display_name():
+    name = name_entry.get()
+    save_name(name)
+    clear_window()
+    display_saved_name(name)
+    create_dropdown("Tipo de pelo", ["Pelón", "Largo", "Corto"], row=1, column=0, num = 2)
+    create_dropdown("Tipo de ojos", ["Pequeños", "Grandes", "Separados"], row=1, column=1, num = 3)
+    create_dropdown("Estado de ánimo", ["Feliz", "Enojado"], row=5, column=0, num = 5)
+    create_dropdown("Te encuentras en peligro de muerte\ny puedes hacer una llamada\n ¿a quién le marcarías?", ["Feliz", "Enojado"], row=5, column=1, num = 6)
+    create_dropdown("Estado de ánimo", ["Feliz", "Enojado"], row=7, column=0, num = 7)
+    boton()
+
+
+def display_image():
+    name = name_entry.get()
+    save_name(name)
+    clear_window()
+    display_saved_name(name)
+    chuek()
+def save_name(name):
+    with open("saved_name.txt", "w") as file:
+        file.write(name)
+
+def clear_window():
+    for widget in win.winfo_children():
+        widget.destroy()
+
+def display_saved_name(name):
+    label = tk.Label(win, text=f"Bienvenido, {name}!", font=tipografia, bg='#33EBA7')
+    label.grid(row=0, column=0, columnspan=3)
+
+def show(option, entry_var):
+    entry_var.set(option)
+
+
+def boton():
+    button = tk.Button(win, text="Confirmar", command=display_image)
+    button.grid(row=9, column=0, columnspan=3)
+
+def create_dropdown(label_text, options, row, column, num):
+    entry_var = tk.StringVar(win)
+    result_entry_var = tk.Entry(win, state='readonly', font=tipotexto)
+    result_entry_var.grid(row=row + 2, column=2, sticky="w", padx=20)
+
+    label = tk.Label(win, text=label_text, font=tipotexto, bg='#33EBA7')
+    label.grid(row=row, column=column, sticky="w", padx=20)
+
+    clicked = tk.StringVar(win)
+    clicked.set(options[0])
+
+    drop = tk.OptionMenu(win, clicked, *options, command=lambda value=clicked.get(): show(value, entry_var))
+    drop.grid(row=row + 1, column=column, sticky="w", padx=20)
+
+    entry_var.set(options[0])
+    entry = tk.Entry(win, textvariable=entry_var, state='readonly', font=tipotexto)
+    entry.grid(row= num, column=2, sticky="nw", padx=20)
+
+    # Función para actualizar la entrada resultante
+    def update_result(value):
+        result_entry_var.configure(state='normal')  # Habilita la edición
+        result_entry_var.delete(0, 'end')  # Limpia el contenido actual
+        result_entry_var.insert(0, value)  # Inserta la nueva opción
+        result_entry_var.configure(state='readonly')  # Deshabilita la edición
+
+    # Asociar la función de actualización al cambio en el menú desplegable
+    clicked.trace_add('write', lambda *args: update_result(clicked.get()))
+
+def chuek():
+    # Insertarla en una etiqueta.
+    image = tk.PhotoImage(file="shreknegro.png")
+    label = ttk.Label(image=image)
+    label.grid(row = 1, column = 1)
+
+win = tk.Tk()
+win.title("Proyecto Final Programación")
+win.geometry("1200x800")
+win['bg'] = '#33EBA7'
+
+win.grid_rowconfigure(0, weight=0)
+win.grid_rowconfigure(1, weight=0)
+win.grid_rowconfigure(2, weight=1)
+win.grid_rowconfigure(3, weight=0)
+win.grid_rowconfigure(4, weight=1)
+win.grid_rowconfigure(5, weight=1)
+win.grid_rowconfigure(6, weight=1)
+win.grid_rowconfigure(7, weight=1)
+win.grid_rowconfigure(8, weight=1)
+win.grid_rowconfigure(9, weight=1)
+win.grid_columnconfigure(0, weight=1)
+win.grid_columnconfigure(1, weight=1)  # Agregado para equilibrar el ancho de las columnas
+win.grid_columnconfigure(2, weight=1)
+
+tipografia = ("Comic Sans MS", 35, "bold")
+tipotexto = ("Comic Sans MS", 15)
+tiporespuesta = ("Comic Sans MS", 10)
+
+Bienvenida = tk.Label(win, text="Bienvenido a FindMyShrek.com", font=tipografia, bg='#856ff8')
+Bienvenida.grid(row=0, column=0, columnspan=3, sticky="snew")
+
+espacio = tk.Label(win, text="", font=tipografia, bg='#33EBA7')
+espacio.grid(row=1, column=0)
+
+name_label = tk.Label(win, text="Por favor, introduce tu nombre:", font=tipotexto)
+name_label.grid(row=2, column=0, columnspan=3, sticky="")
+
+name_entry = tk.Entry(win)
+name_entry.grid(row=3, column=0, columnspan=3, sticky="nsew", padx=20)
+name_entry.configure(font=tipotexto)
+
+espacio = tk.Label(win, text="", font=tipografia, bg='#33EBA7')
+espacio.grid(row=4, column=0)
+
+button = tk.Button(win, text="Guardar Nombre", command=save_and_display_name)
+button.grid(row=4, column=0, columnspan=3)
+
+win.mainloop()
+
+
+
+
+
