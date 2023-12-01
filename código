@@ -5,11 +5,11 @@ from PIL import ImageTk, Image
 
 fondo = '#33EBA7'
 
-def save_and_display_name():
+def segundapantalla():
     name = name_entry.get()
     save_name(name)
     clear_window()
-    display_saved_name(name)
+    nombre(name)
     # Pelo
     create_dropdown("Te ofrecen un contrato millonario para dar una\n gira internacional, pero tienes que colaborar\n con alguien. ¿Quién se colgará de tu fama?",
                     ["   -   ", "Freddy Mercury", "Beethoven", "Lord Farquaad", "Bad Bunny Pelón"], row=1, column=0, num=2, orden = 1)
@@ -43,7 +43,7 @@ def clear_window():
     for widget in win.winfo_children():
         widget.destroy()
 
-def display_saved_name(name):
+def nombre(name):
     label = tk.Label(win, text=f"Bienvenido, {name}!", font=tipografia, bg='#33EBA7')
     label.grid(row=0, column=0, columnspan=3, pady=15)
 
@@ -209,7 +209,7 @@ name_entry.configure(font=tipotexto, justify="center")
 espacio = tk.Label(win, text="", font=tipografia, bg='#33EBA7')
 espacio.grid(row=5, column=0, sticky="n")
 
-button = tk.Button(win, text="Continuar", command=save_and_display_name, font=tiporespuesta)
+button = tk.Button(win, text="Continuar", command=segundapantalla, font=tiporespuesta)
 button.grid(row=5, column=0, columnspan=3, sticky="")
 
 #win.wm_attributes("-transparentcolor", "white")
