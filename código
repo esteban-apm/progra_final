@@ -1,25 +1,40 @@
 import tkinter as tk
 from tkinter import ttk
 
+from PIL import ImageTk, Image
+
+fondo = '#33EBA7'
+
 def save_and_display_name():
     name = name_entry.get()
     save_name(name)
     clear_window()
     display_saved_name(name)
-    create_dropdown("Tipo de pelo", ["Pelón", "Largo", "Corto"], row=1, column=0, num = 2)
-    create_dropdown("Tipo de ojos", ["Pequeños", "Grandes", "Separados"], row=1, column=1, num = 3)
-    create_dropdown("Estado de ánimo", ["Feliz", "Enojado"], row=5, column=0, num = 5)
-    create_dropdown("Te encuentras en peligro de muerte\ny puedes hacer una llamada\n ¿a quién le marcarías?", ["Feliz", "Enojado"], row=5, column=1, num = 6)
-    create_dropdown("Estado de ánimo", ["Feliz", "Enojado"], row=7, column=0, num = 7)
-    boton()
+    # Pelo
+    create_dropdown("Te ofrecen un contrato millonario para dar una\n gira internacional, pero tienes que colaborar\n con alguien. ¿Quién se colgará de tu fama?",
+                    ["   -   ", "Freddy Mercury", "Beethoven", "Lord Farquaad", "Bad Bunny Pelón"], row=1, column=0, num=2, orden = 1)
+    # Cejas
+    create_dropdown("Te eligen para dirigir a tu Selección en el\n Mundial 2026, ¿quién entra en tu equipo?",
+                    ["   -   ", "Angry Birds", "Puercos Verdes"], row=5, column=0, num=3, orden = 2)
+    # Ojos
+    create_dropdown("Tienes la oportunidad de pasar tus últimas \n24 horas de tu vida con uno de los \nsiguientes personajes, ¿A quién elegirías?",
+                    ["   -   ", "Caillou", "Killer Bean", "Cepillín"], row=1, column=1, num=5, orden = 3)
+    # Boca
+    create_dropdown("Se dice que en el instante previo a su muerte, la \ngente es capaz de ver toda su vida pasar. Si tu vida \nfuera una de las siguientes películas, ¿cuál elegirías?",
+                    ["   -   ", "Marcianos vs Mexicanos", "Wendy Hu", "Taxi Driver"], row=5, column=1, num=6, orden = 4)
+    # Cara
+    create_dropdown(
+        " ¡Buenos días!",
+        ["   -   ", "Buenos días", "Tardes ya"], row=7, column=0, num=7, orden=6)
+    # Nariz
+    create_dropdown("Estás por exponer tu proyecto final de Métodos\n de Programación y no llega tu equipo. El profesor\n te permite hacer una llamada, ¿a quién le marcas?",
+                    ["   -   ", "Chico Percebe", "La Burbuja Sucia", "Bob Esponja"], row=7, column=1, num=8, orden = 5)
 
-
-def display_image():
-    name = name_entry.get()
-    save_name(name)
+def imagenes():
+    global seleccion1, seleccion2, seleccion3, seleccion4, seleccion5, seleccion6
     clear_window()
-    display_saved_name(name)
-    chuek()
+    elegirfotos()
+
 def save_name(name):
     with open("saved_name.txt", "w") as file:
         file.write(name)
@@ -30,54 +45,129 @@ def clear_window():
 
 def display_saved_name(name):
     label = tk.Label(win, text=f"Bienvenido, {name}!", font=tipografia, bg='#33EBA7')
-    label.grid(row=0, column=0, columnspan=3)
+    label.grid(row=0, column=0, columnspan=3, pady=15)
 
-def show(option, entry_var):
+def show(option, entry_var, orden):
+    global preguntas
+    global seleccion1, seleccion2, seleccion3, seleccion4, seleccion5,seleccion6
+
     entry_var.set(option)
+    if preguntas >= 6:
+        boton()
+    print(preguntas)
 
+    if orden == 1:
+        seleccion1 = option
+    elif orden == 2:
+        seleccion2 = option
+    elif orden == 3:
+        seleccion3 = option
+    elif orden == 4:
+        seleccion4 = option
+    elif orden == 5:
+        seleccion5 = option
+    elif orden == 6:
+        seleccion6 = option
 
 def boton():
-    button = tk.Button(win, text="Confirmar", command=display_image)
+    button = tk.Button(win, text="Confirmar", command=imagenes)
     button.grid(row=9, column=0, columnspan=3)
 
-def create_dropdown(label_text, options, row, column, num):
-    entry_var = tk.StringVar(win)
-    result_entry_var = tk.Entry(win, state='readonly', font=tipotexto)
-    result_entry_var.grid(row=row + 2, column=2, sticky="w", padx=20)
+def mostrarPregunta(label):
+    global preguntas
+    label.configure(bg=fondo)
+    preguntas += 1
+def mostrar_imagen(canvas, image_path):
+    photo = tk.PhotoImage(file=image_path)
+    canvas.create_image(0, 0, image=photo, anchor=tk.NW)
+    return photo
 
-    label = tk.Label(win, text=label_text, font=tipotexto, bg='#33EBA7')
-    label.grid(row=row, column=column, sticky="w", padx=20)
+def elegirfotos():
+    canvas = tk.Canvas(win, bg="white", width=700, height=700)
+    canvas.grid(row=7, column=0, columnspan=3)
+
+    images = []
+
+    if seleccion1 == "Freddy Mercury":
+        images.append(mostrar_imagen(canvas, "pelo corto.png"))
+    elif seleccion1 == "Lord Farquaad":
+        images.append(mostrar_imagen(canvas, "pelo largo lacio.png"))
+    elif seleccion1 == "Beethoven":
+        images.append(mostrar_imagen(canvas, "pelo chino.png"))
+    elif seleccion1 == "Bad Bunny Pelón":
+        images.append(mostrar_imagen(canvas, "pelo de coco.png"))
+
+    if seleccion2 == "Angry Birds":
+        images.append(mostrar_imagen(canvas, "cejas enojado (1).png"))
+    elif seleccion2 == "Puercos Verdes":
+        images.append(mostrar_imagen(canvas, ""))
+
+    if seleccion3 == "Caillou":
+        images.append(mostrar_imagen(canvas, "ojos chicos.png"))
+    elif seleccion3 == "Killer Bean":
+        images.append(mostrar_imagen(canvas, "ojos grandes.png"))
+    elif seleccion3 == "Cepillín":
+        images.append(mostrar_imagen(canvas, "ojos separados.png"))
+
+    if seleccion4 == "Marcianos vs Mexicanos":
+        images.append(mostrar_imagen(canvas, "boca feliz.png"))
+    elif seleccion4 == "Wendy Hu":
+        images.append(mostrar_imagen(canvas, "boca seria.png"))
+    elif seleccion4 == "Taxi Driver":
+        images.append(mostrar_imagen(canvas, "boca triste.png"))
+
+    if seleccion5 == "Chico Percebe":
+        images.append(mostrar_imagen(canvas, "nariz redonda.png"))
+    elif seleccion5 == "La Burbuja Sucia":
+        images.append(mostrar_imagen(canvas, "nariz rara.png"))
+    elif seleccion5 == "Bob Esponja":
+        images.append(mostrar_imagen(canvas, "nariz triangular.png"))
+
+    if seleccion6 == "Buenos días":
+        images.append(mostrar_imagen(canvas, "cara redonda (1).png"))
+    elif seleccion6 == "Tardes ya":
+        images.append(mostrar_imagen(canvas, "cara larga (2).png"))
+
+    canvas.images = images
+
+def create_dropdown(label_text, options, row, column, num, orden):
+    global preguntas
+    global seleccion1, seleccion2, seleccion3, seleccion4, seleccion5, seleccion6
+    entry_var = tk.StringVar(win)
+
+    label = tk.Label(win, text=label_text, font=tipotexto, bg=fondo)
+    label.grid(row=row, column=column, sticky="nsew", padx=20)
 
     clicked = tk.StringVar(win)
     clicked.set(options[0])
 
-    drop = tk.OptionMenu(win, clicked, *options, command=lambda value=clicked.get(): show(value, entry_var))
-    drop.grid(row=row + 1, column=column, sticky="w", padx=20)
+    def activardrop():
+        drop = tk.OptionMenu(win, clicked, *options, command=lambda value=clicked.get(), label=label: (show(value, entry_var, orden)))
+        drop.grid(row=row + 1, column=column, sticky="", padx=20)
+
 
     entry_var.set(options[0])
-    entry = tk.Entry(win, textvariable=entry_var, state='readonly', font=tipotexto)
-    entry.grid(row= num, column=2, sticky="nw", padx=20)
+    entry = tk.Entry(win, textvariable=entry_var, state='readonly', font=tipotexto, justify="center")
+    entry.grid(row=num, column=2, sticky="nw", padx=20)
 
-    # Función para actualizar la entrada resultante
-    def update_result(value):
-        result_entry_var.configure(state='normal')  # Habilita la edición
-        result_entry_var.delete(0, 'end')  # Limpia el contenido actual
-        result_entry_var.insert(0, value)  # Inserta la nueva opción
-        result_entry_var.configure(state='readonly')  # Deshabilita la edición
-
-    # Asociar la función de actualización al cambio en el menú desplegable
-    clicked.trace_add('write', lambda *args: update_result(clicked.get()))
+    label.configure(bg="black")
+    button = tk.Button(win, text="Mostrar", command=lambda  locallabel=label: (mostrarPregunta(locallabel), activardrop()))
+    button.grid(row=row + 1, column=column, sticky="w")
 
 def chuek():
     # Insertarla en una etiqueta.
     image = tk.PhotoImage(file="shreknegro.png")
-    label = ttk.Label(image=image)
-    label.grid(row = 1, column = 1)
+    label = ttk.Label(win, image=image)
+    label.image = image
+    label.grid(row=7, column=0, columnspan=3)
 
 win = tk.Tk()
+win.minsize("1300", "800")
 win.title("Proyecto Final Programación")
-win.geometry("1200x800")
+win.geometry("1400x800")
 win['bg'] = '#33EBA7'
+
+preguntas = 0
 
 win.grid_rowconfigure(0, weight=0)
 win.grid_rowconfigure(1, weight=0)
@@ -90,12 +180,12 @@ win.grid_rowconfigure(7, weight=1)
 win.grid_rowconfigure(8, weight=1)
 win.grid_rowconfigure(9, weight=1)
 win.grid_columnconfigure(0, weight=1)
-win.grid_columnconfigure(1, weight=1)  # Agregado para equilibrar el ancho de las columnas
+win.grid_columnconfigure(1, weight=1)
 win.grid_columnconfigure(2, weight=1)
 
 tipografia = ("Comic Sans MS", 35, "bold")
 tipotexto = ("Comic Sans MS", 15)
-tiporespuesta = ("Comic Sans MS", 10)
+tiporespuesta = ("Comic Sans MS", 12)
 
 Bienvenida = tk.Label(win, text="Bienvenido a FindMyShrek.com", font=tipografia, bg='#856ff8')
 Bienvenida.grid(row=0, column=0, columnspan=3, sticky="snew")
@@ -103,22 +193,30 @@ Bienvenida.grid(row=0, column=0, columnspan=3, sticky="snew")
 espacio = tk.Label(win, text="", font=tipografia, bg='#33EBA7')
 espacio.grid(row=1, column=0)
 
+mensaje = tk.Label(win, text="Construye a tu persona ideal", font=tipotexto, bg=fondo)
+mensaje.grid(row=1, column=0, columnspan=3, sticky="s")
+
+mensaje2 = tk.Label(win, text="¡Y nosotros te la mostraremos!", font=tiporespuesta, bg=fondo)
+mensaje2.grid(row=2, column=0, columnspan=3, sticky="n")
+
 name_label = tk.Label(win, text="Por favor, introduce tu nombre:", font=tipotexto)
-name_label.grid(row=2, column=0, columnspan=3, sticky="")
+name_label.grid(row=3, column=0, columnspan=3, sticky="s")
 
 name_entry = tk.Entry(win)
-name_entry.grid(row=3, column=0, columnspan=3, sticky="nsew", padx=20)
-name_entry.configure(font=tipotexto)
+name_entry.grid(row=4, column=0, columnspan=3, sticky="n", padx=20)
+name_entry.configure(font=tipotexto, justify="center")
 
 espacio = tk.Label(win, text="", font=tipografia, bg='#33EBA7')
-espacio.grid(row=4, column=0)
+espacio.grid(row=5, column=0, sticky="n")
 
-button = tk.Button(win, text="Guardar Nombre", command=save_and_display_name)
-button.grid(row=4, column=0, columnspan=3)
+button = tk.Button(win, text="Continuar", command=save_and_display_name, font=tiporespuesta)
+button.grid(row=5, column=0, columnspan=3, sticky="")
+
+#win.wm_attributes("-transparentcolor", "white")
+
+photoimage = tk.PhotoImage(file="ojos grandes.png")
+photoimage2 = tk.PhotoImage(file="pelo largo lacio.png")
+
+
 
 win.mainloop()
-
-
-
-
-
